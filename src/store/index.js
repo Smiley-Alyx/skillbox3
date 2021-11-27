@@ -62,7 +62,9 @@ export default new Vuex.Store({
       );
     },
     cartTotalProducts(state) {
-      return state.cartProducts.length;
+      return state.cartProducts.reduce(function (sum, item) {
+        return sum + item.amount;
+      }, 0);
     },
     cartTotalProductsStr(state, getters) {
       const totalProducts = getters.cartTotalProducts;

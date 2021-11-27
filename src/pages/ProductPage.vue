@@ -130,7 +130,7 @@
             <div class="item__row">
               <div class="form__counter">
                 <ProductMinus v-model="productAmount"/>
-                <input type="text" value="1" v-model="productAmount">
+                <input type="text" value="1" v-model.number="productAmount" oninput="if(this.value < 1) this.value = 1;">
                 <ProductPlus v-model="productAmount"/>
               </div>
 
@@ -257,7 +257,7 @@ export default {
         'addProductToCart',
         {
           productId: this.product.id,
-          amount: this.productAmount,
+          amount: parseInt(this.productAmount),
         },
       );
     },

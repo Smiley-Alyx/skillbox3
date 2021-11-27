@@ -4,7 +4,11 @@
       <use xlink:href="#icon-cart"></use>
     </svg>
     <span class="header__count" aria-label="Количество товаров">
-      {{ $store.state.cartProducts.length }}
+      {{
+        $store.state.cartProducts.reduce(function (sum, item) {
+          return sum + item.amount;
+        }, 0)
+      }}
     </span>
   </router-link>
 </template>

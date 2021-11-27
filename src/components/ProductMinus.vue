@@ -11,9 +11,7 @@ export default {
   props: ['value'],
   methods: {
     decrement() {
-      if (this.value > 1) {
-        this.$emit('input', this.value - 1);
-      }
+      this.$emit('input', (parseInt(this.value)) > 1 ? parseInt(this.value) - 1 : 1);
     },
   },
 };

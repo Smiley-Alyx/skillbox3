@@ -17,7 +17,7 @@
 
     <div class="product__counter form__counter">
       <ProductMinus v-model="amount"/>
-      <input type="text" v-model="amount" name="count">
+      <input type="text" v-model.number="amount" name="count" oninput="if(this.value < 1) this.value = 1;">
       <ProductPlus v-model="amount"/>
     </div>
 
