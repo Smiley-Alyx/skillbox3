@@ -59,7 +59,7 @@ export default {
         return this.item.amount;
       },
       set(value) {
-        this.$store.commit(
+        this.$store.dispatch(
           'updateCartProductAmount',
           {
             productId: this.item.productId,
@@ -77,7 +77,7 @@ export default {
 
     },
     deleteProduct(productId) {
-      this.$store.commit('deleteCartProduct', productId);
+      this.$store.dispatch('deleteCartProduct', productId);
     },
   },
 };
