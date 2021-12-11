@@ -23,9 +23,7 @@
           Загрузка товаров произошла ошибка!
           <button @click.prevent="loadProducts">Попробовать ещё раз!</button>
         </div>
-        <ProductList
-          :products="products"
-        />
+        <ProductList v-if="!productsLoading" :products="products"/>
         <BasePagination v-model="page" :count="countProducts" :per-page="productPerPage" />
       </section>
 
@@ -96,7 +94,7 @@ export default {
           .then(response => this.productsData = response.data)
           .catch(() => { this.productsLoadingFailed = true; })
           .then(() => { this.productsLoading = false; });
-      }, 3000);
+      }, 500);
     },
   },
   watch: {
