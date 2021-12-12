@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from "axios";
-import {API_BASE_URL} from "../config";
+import {API_BASE_URL} from "@/config";
+import declension from "@/helpers/declension";
 
 Vue.use(Vuex);
 
@@ -10,8 +11,16 @@ export default new Vuex.Store({
     cartProducts: [],
     userAccessKey: null,
     cartProductsData: [],
+    orderInfo: null,
   },
   mutations: {
+    updateOrderInfo(state, orderInfo) {
+      state.orderInfo = orderInfo;
+    },
+    resetCart(state) {
+      state.cartProducts = [];
+      state.cartProductsData = [];
+    },
     updateCartProductAmount(state, { productId, amount }) {
       const item = state.cartProducts.find(
         (item) => item.productId === productId,
@@ -65,21 +74,53 @@ export default new Vuex.Store({
       }, 0);
     },
     cartTotalProductsStr(state, getters) {
-      const totalProducts = getters.cartTotalProducts;
-      const titles = [
+      return declension([
         'товар',
         'товара',
         'товаров',
-      ];
-      const cases = [2, 0, 1, 1, 1, 2];
-      const casesIn = cases[(totalProducts % 10 < 5) ? totalProducts % 10 : 5];
-
-      return titles[
-        (totalProducts % 100 > 4 && totalProducts % 100 < 20) ? 2 : casesIn
-      ];
+      ], getters.cartTotalProducts);
+    },
+    orderDetailInfo(state) {
+      return state.orderInfo;
+    },
+    orderDetailProducts(state) {
+      return state.orderInfo ? state.orderInfo.basket.items.map(item => {
+        const product = item.product;
+        return {
+          id: item.id,
+          amount: item.quantity,
+          product: {
+            ...product,
+            image: product.image.file.url
+          }
+        };
+      }) : {};
+    },
+    orderTotalProducts(state, getters) {
+      return getters.orderDetailProducts.reduce(function (sum, item) {
+        return sum + item.amount;
+      }, 0);
+    },
+    orderTotalProductsStr(state, getters) {
+      return declension([
+        'товар',
+        'товара',
+        'товаров',
+      ], getters.orderDetailProducts);
     },
   },
   actions: {
+    loadOrderInfo(context, orderId) {
+      return axios
+        .get(API_BASE_URL + `/api/orders/` + orderId, {
+          params: {
+            userAccessKey: context.state.userAccessKey
+          }
+        })
+        .then(response => {
+          context.commit('updateOrderInfo', response.data);
+        });
+    },
     loadCart(context) {
       return axios
         .get(API_BASE_URL + `/api/baskets`, {
@@ -136,7 +177,6 @@ export default new Vuex.Store({
         });
     },
     deleteCartProduct(context, productId) {
-      console.log(context.state.userAccessKey);
       return axios
         .delete(API_BASE_URL + `/api/baskets/products`, {
           params: {
