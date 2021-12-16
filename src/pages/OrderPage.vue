@@ -47,7 +47,7 @@
             <ul class="cart__options options">
               <li class="options__item">
                 <label class="options__label">
-                  <input class="options__radio sr-only" type="radio" name="delivery" value="0" checked="">
+                  <input class="options__radio sr-only" v-model.number="orderDelivery" type="radio" name="delivery" value="0" checked="">
                   <span class="options__value">
                     Самовывоз <b>бесплатно</b>
                   </span>
@@ -55,7 +55,7 @@
               </li>
               <li class="options__item">
                 <label class="options__label">
-                  <input class="options__radio sr-only" type="radio" name="delivery" value="500">
+                  <input class="options__radio sr-only" v-model.number="orderDelivery" type="radio" name="delivery" value="500">
                   <span class="options__value">
                     Курьером <b>500 ₽</b>
                   </span>
@@ -95,7 +95,7 @@
           </ul>
 
           <div class="cart__total">
-            <p>Доставка: <b>500 ₽</b></p>
+            <p>Доставка: <b>{{ orderDelivery | numberFormat }} ₽</b></p>
             <p>Итого: <b>{{ totalProducts }}</b> {{ totalProductsStr }} на сумму <b>{{ totalPrice | numberFormat }} ₽</b></p>
           </div>
 
@@ -130,6 +130,7 @@ export default {
       formData: {},
       formError: {},
       formErrorMessage: '',
+      orderDelivery: 0,
     }
   },
   filters: {
