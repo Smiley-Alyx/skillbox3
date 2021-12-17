@@ -129,7 +129,8 @@ export default new Vuex.Store({
           }
         })
         .then(response => {
-          if (typeof context.state.userAccessKey === undefined) {
+          //if (typeof context.state.userAccessKey === 'undefined') {
+          if (context.state.userAccessKey === null) {
             localStorage.setItem('userAccessKey', response.data.user.accessKey);
             context.commit('updateUserAccessKey', response.data.user.accessKey);
           }
